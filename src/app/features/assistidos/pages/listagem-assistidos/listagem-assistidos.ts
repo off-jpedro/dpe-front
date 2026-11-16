@@ -35,36 +35,28 @@ export class ListagemAssistidosComponent implements OnInit {
 
   private readonly pesquisa$ = new Subject<string>();
 
-  // Registros recebidos da API para a página atual.
   assistidos = signal<AssistidoResponse[]>([]);
 
-  // Pesquisa e filtros.
   termoPesquisa = signal('');
   filtroStatus = signal<FiltroStatus>('todos');
 
-  // Paginação: a interface começa em 1, a API começa em 0.
   paginaAtual = signal(1);
   itensPorPagina = signal(5);
 
-  // Totais gerais.
   totalAssistidos = signal(0);
   totalAtivos = signal(0);
   totalInativos = signal(0);
 
-  // Estado da tela.
   carregando = signal(false);
   processandoAcao = signal(false);
   erro = signal<string | null>(null);
 
-  // Assistido selecionado para confirmação de status.
   assistidoSelecionado = signal<AssistidoResponse | null>(null);
 
   assistidoParaExcluir = signal<AssistidoResponse | null>(null);
 
-  // Metadados de paginação recebidos do backend.
   private totalPaginasApi = signal(0);
 
-  // Mantém compatibilidade com os nomes usados no HTML atual.
   assistidosFiltrados = computed(() => this.assistidos());
   assistidosPaginados = computed(() => this.assistidos());
 
@@ -198,8 +190,6 @@ export class ListagemAssistidosComponent implements OnInit {
       return filtros;
     }
 
-    // Se a pesquisa contém somente números e pontuação de CPF,
-    // enviamos o filtro cpf. Caso contrário, enviamos nome.
     const pareceCpf = /^[\d.\-\s]+$/.test(termo);
     const cpf = termo.replace(/\D/g, '');
 

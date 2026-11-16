@@ -4,7 +4,6 @@
   background-color: #f1f6f2;
 }
 
-/* Estrutura geral */
 .pagina-container {
   padding: 32px;
   max-width: 1500px;
@@ -12,7 +11,6 @@
   color: #26352d;
 }
 
-/* Cabeçalho */
 .pagina-header {
   background: linear-gradient(120deg, #176b45, #238653);
   color: white;
@@ -60,7 +58,6 @@
   cursor: not-allowed;
 }
 
-/* Indicadores */
 .indicadores {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -117,7 +114,6 @@
   color: #245c3d;
 }
 
-/* Card principal */
 .conteudo-card {
   background: white;
   border: 1px solid #e1ebe3;

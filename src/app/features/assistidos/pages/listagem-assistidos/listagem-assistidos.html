@@ -1,6 +1,5 @@
 <main class="pagina-container">
 
-  <!-- Cabeçalho -->
   <header class="pagina-header">
     <div>
       <h1>Assistidos</h1>
@@ -13,7 +12,6 @@
     </button>
   </header>
 
-  <!-- Indicadores -->
   <section class="indicadores">
 
     <article class="indicador-card">
@@ -42,7 +40,6 @@
 
   </section>
 
-  <!-- Listagem -->
   <section class="conteudo-card">
 
     <div class="conteudo-header">
@@ -52,7 +49,6 @@
       </div>
     </div>
 
-    <!-- Pesquisa -->
     <div class="filtros-container">
 
       <div class="pesquisa-container">
@@ -62,7 +58,6 @@
           [value]="termoPesquisa()" (input)="atualizarPesquisa($event)" />
       </div>
 
-      <!-- Filtros de status -->
       <div class="filtros-status" aria-label="Filtrar por status">
 
         <button type="button" [class.filtro-selecionado]="filtroStatus() === 'todos'" (click)="alterarFiltro('todos')">
@@ -83,7 +78,6 @@
 
     </div>
 
-    <!-- Tabela -->
     <div class="tabela-container">
 
       <table>
@@ -207,7 +201,6 @@
 
     </div>
 
-    <!-- Paginação -->
     <footer class="paginacao-container">
 
       <div class="paginacao-info">
@@ -258,7 +251,6 @@
 
 </main>
 
-<!-- Modal de confirmação -->
 @if (assistidoSelecionado(); as selecionado) {
 
 <div class="modal-overlay">
@@ -307,7 +299,6 @@
 
 }
 
-<!-- Modal de exclusão permanente -->
 @if (assistidoParaExcluir(); as selecionado) {
 
   <div class="modal-overlay">

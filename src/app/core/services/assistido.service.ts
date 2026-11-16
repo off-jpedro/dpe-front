@@ -41,7 +41,6 @@ export class AssistidoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // Todos os assistidos: ativos e inativos.
   findAll(
     filtros: AssistidoListagemParams
   ): Observable<PageResponse<AssistidoResponse>> {
@@ -53,7 +52,6 @@ export class AssistidoService {
     );
   }
 
-  // Somente assistidos ativos.
   findActive(
     filtros: AssistidoListagemParams
   ): Observable<PageResponse<AssistidoResponse>> {
@@ -65,7 +63,6 @@ export class AssistidoService {
     );
   }
 
-  // Somente assistidos inativos.
   findInactive(
     filtros: AssistidoListagemParams
   ): Observable<PageResponse<AssistidoResponse>> {
