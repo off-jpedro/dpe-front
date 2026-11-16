@@ -1,0 +1,233 @@
+<div class="form-page">
+
+  <header class="page-header">
+    <div>
+      <h1>{{ isEdicao ? 'Editar assistido' : 'Novo assistido' }}</h1>
+
+      <p>
+        {{ isEdicao
+        ? 'Atualize os dados cadastrais do assistido.'
+        : 'Preencha os dados para realizar o cadastro.'
+        }}
+      </p>
+    </div>
+
+    <button type="button" class="btn-secondary" (click)="voltar()">
+      Voltar
+    </button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()">
+
+    <section class="form-section">
+      <h2>Dados pessoais</h2>
+
+      <div class="form-grid">
+
+        <div class="field full-width">
+          <label for="nomeCompleto">Nome completo *</label>
+          <input id="nomeCompleto" type="text" formControlName="nomeCompleto">
+
+          @if (form.controls.nomeCompleto.touched &&
+          form.controls.nomeCompleto.hasError('required')) {
+          <small>Informe o nome completo.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="cpf">CPF *</label>
+
+          <input id="cpf" type="text" formControlName="cpf" placeholder="Somente números" maxlength="11"
+            inputmode="numeric" autocomplete="off" [class.input-error]="cpfServerError || (
+      form.controls.cpf.touched &&
+      form.controls.cpf.invalid
+    )" [attr.aria-invalid]="!!cpfServerError" (input)="somenteNumerosCpf($event)">
+
+          @if (cpfServerError) {
+          <small class="error" role="alert">
+            {{ cpfServerError }}
+          </small>
+          } @else if (
+          form.controls.cpf.touched &&
+          form.controls.cpf.invalid
+          ) {
+          <small class="error">
+            Informe um CPF válido com 11 números.
+          </small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="dataNascimento">Data de nascimento *</label>
+          <input id="dataNascimento" type="date" formControlName="dataNascimento">
+
+          @if (form.controls.dataNascimento.touched &&
+          form.controls.dataNascimento.invalid) {
+          <small>Informe a data de nascimento.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="telefonePrincipal">Telefone principal *</label>
+          <input id="telefonePrincipal" type="tel" formControlName="telefonePrincipal" placeholder="(62) 99999-9999">
+
+          @if (form.controls.telefonePrincipal.touched &&
+          form.controls.telefonePrincipal.invalid) {
+          <small>Informe um telefone válido.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" formControlName="email" placeholder="exemplo@email.com">
+
+          @if (form.controls.email.touched &&
+          form.controls.email.invalid) {
+          <small>Informe um e-mail válido.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="nacionalidade">Nacionalidade *</label>
+          <input id="nacionalidade" type="text" formControlName="nacionalidade" readonly>
+        </div>
+
+
+        <div class="field">
+          <label for="rendaMensal">Renda mensal individual *</label>
+
+          <input id="rendaMensal" type="number" min="0" max="9999999999.99" step="0.01" formControlName="rendaMensal"
+            (input)="limitarRenda($event)">
+
+          @if (form.controls.rendaMensal.hasError('required') &&
+          form.controls.rendaMensal.touched) {
+          <small class="error">A renda mensal é obrigatória.</small>
+          }
+
+          @if (form.controls.rendaMensal.hasError('min') &&
+          form.controls.rendaMensal.touched) {
+          <small class="error">A renda não pode ser negativa.</small>
+          }
+
+          @if (form.controls.rendaMensal.hasError('max') &&
+          form.controls.rendaMensal.touched) {
+          <small class="error">A renda máxima permitida é R$ 9.999.999.999,99.</small>
+          }
+        </div>
+
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h2>Situação habitacional</h2>
+
+      <div class="field">
+        <label for="situacaoDeRua">
+          A pessoa está em situação de rua? *
+        </label>
+
+        <select id="situacaoDeRua" formControlName="situacaoDeRua">
+          <option [ngValue]="false">Não</option>
+          <option [ngValue]="true">Sim</option>
+        </select>
+      </div>
+
+      @if (!form.controls.situacaoDeRua.value) {
+      <div formGroupName="endereco" class="address-section">
+
+        <h3>Endereço</h3>
+
+        <div class="form-grid">
+
+          <div class="field full-width">
+            <label for="logradouro">Logradouro *</label>
+            <input id="logradouro" type="text" formControlName="logradouro">
+            @if (form.get('endereco.logradouro')?.touched &&
+            form.get('endereco.logradouro')?.hasError('required')) {
+            <small>Informe o logradouro.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="numero">Número *</label>
+            <input id="numero" type="text" formControlName="numero">
+            @if (form.get('endereco.numero')?.touched &&
+            form.get('endereco.numero')?.invalid) {
+            <small>Informe o número.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="complemento">Complemento</label>
+            <input id="complemento" type="text" formControlName="complemento">
+          </div>
+
+          <div class="field">
+            <label for="bairro">Bairro *</label>
+            <input id="bairro" type="text" formControlName="bairro">
+            @if (form.get('endereco.bairro')?.touched &&
+            form.get('endereco.bairro')?.invalid) {
+            <small>Informe o bairro.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="cidade">Cidade *</label>
+            <input id="cidade" type="text" formControlName="cidade">
+            @if (form.get('endereco.cidade')?.touched &&
+            form.get('endereco.cidade')?.invalid) {
+            <small>Informe a cidade.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="estado">Estado *</label>
+            <input id="estado" type="text" maxlength="2" formControlName="estado" placeholder="GO">
+            @if (form.get('endereco.estado')?.touched &&
+            form.get('endereco.estado')?.invalid) {
+            <small>Informe a sigla do estado.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="cep">CEP *</label>
+            <input id="cep" type="text" formControlName="cep" placeholder="74000-000">
+            @if (form.get('endereco.cep')?.touched &&
+            form.get('endereco.cep')?.invalid) {
+            <small>Informe um CEP válido.</small>
+            }
+          </div>
+
+        </div>
+      </div>
+      } @else {
+      <p class="info-message">
+        O preenchimento do endereço não é necessário para pessoas
+        em situação de rua.
+      </p>
+      }
+
+    </section>
+
+    @if (errorMessage) {
+    <div class="error-message" role="alert">
+      {{ errorMessage }}
+    </div>
+    }
+
+    <footer class="form-actions">
+      <button type="button" class="btn-secondary" (click)="voltar()">
+        Cancelar
+      </button>
+
+      <button type="submit" class="btn-primary" [disabled]="enviando">
+        {{
+        enviando
+        ? (isEdicao ? 'Salvando alterações...' : 'Cadastrando...')
+        : (isEdicao ? 'Salvar alterações' : 'Cadastrar assistido')
+        }}
+      </button>
+    </footer>
+
+  </form>
+</div>

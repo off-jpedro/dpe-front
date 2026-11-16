@@ -1,0 +1,368 @@
+<main class="pagina-container">
+
+  <!-- Cabeçalho -->
+  <header class="pagina-header">
+    <div>
+      <h1>Assistidos</h1>
+      <p>Gerenciamento de pessoas assistidas pela Defensoria Pública.</p>
+    </div>
+
+    <button class="btn-novo" type="button" (click)="novoAssistido()">
+      <span>+</span>
+      Novo assistido
+    </button>
+  </header>
+
+  <!-- Indicadores -->
+  <section class="indicadores">
+
+    <article class="indicador-card">
+      <div class="indicador-icone total-icone"><span>♧</span></div>
+      <div>
+        <span class="indicador-label">Total de assistidos</span>
+        <strong>{{ totalAssistidos() }}</strong>
+      </div>
+    </article>
+
+    <article class="indicador-card">
+      <div class="indicador-icone ativo-icone">✓</div>
+      <div>
+        <span class="indicador-label">Assistidos ativos</span>
+        <strong>{{ totalAtivos() }}</strong>
+      </div>
+    </article>
+
+    <article class="indicador-card">
+      <div class="indicador-icone inativo-icone">−</div>
+      <div>
+        <span class="indicador-label">Assistidos inativos</span>
+        <strong>{{ totalInativos() }}</strong>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- Listagem -->
+  <section class="conteudo-card">
+
+    <div class="conteudo-header">
+      <div>
+        <h2>Lista de assistidos</h2>
+        <p>Consulte e gerencie os registros cadastrados.</p>
+      </div>
+    </div>
+
+    <!-- Pesquisa -->
+    <div class="filtros-container">
+
+      <div class="pesquisa-container">
+        <span class="icone-pesquisa">⌕</span>
+
+        <input type="search" placeholder="Pesquisar por nome ou CPF..." aria-label="Pesquisar por nome ou CPF"
+          [value]="termoPesquisa()" (input)="atualizarPesquisa($event)" />
+      </div>
+
+      <!-- Filtros de status -->
+      <div class="filtros-status" aria-label="Filtrar por status">
+
+        <button type="button" [class.filtro-selecionado]="filtroStatus() === 'todos'" (click)="alterarFiltro('todos')">
+          Todos
+        </button>
+
+        <button type="button" [class.filtro-selecionado]="filtroStatus() === 'ativos'"
+          (click)="alterarFiltro('ativos')">
+          Ativos
+        </button>
+
+        <button type="button" [class.filtro-selecionado]="filtroStatus() === 'inativos'"
+          (click)="alterarFiltro('inativos')">
+          Inativos
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Tabela -->
+    <div class="tabela-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Nome completo</th>
+            <th>CPF</th>
+            <th>Data de nascimento</th>
+            <th>Telefone</th>
+            <th>Renda mensal</th>
+            <th>Status</th>
+            <th class="coluna-acoes">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @if (carregando()) {
+
+          <tr>
+            <td colspan="7" class="mensagem-vazia">
+              Carregando assistidos...
+            </td>
+          </tr>
+
+          } @else if (erro()) {
+
+          <tr>
+            <td colspan="7" class="mensagem-vazia">
+              <strong>{{ erro() }}</strong>
+              <p>
+                <button type="button" (click)="carregarAssistidos()">
+                  Tentar novamente
+                </button>
+              </p>
+            </td>
+          </tr>
+
+          } @else {
+
+          @for (assistido of assistidosPaginados(); track assistido.id) {
+
+          <tr>
+
+            <td class="nome-coluna">
+              {{ assistido.nomeCompleto }}
+            </td>
+
+            <td>{{ assistido.cpf }}</td>
+
+            <td>
+              {{ assistido.dataNascimento | date:'dd/MM/yyyy' }}
+            </td>
+
+            <td>{{ assistido.telefonePrincipal }}</td>
+
+            <td>
+              {{ assistido.rendaMensal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </td>
+
+            <td>
+              <span class="status-badge" [class.status-ativo]="assistido.ativo"
+                [class.status-inativo]="!assistido.ativo">
+
+                <span class="status-indicador"></span>
+
+                {{ assistido.ativo ? 'Ativo' : 'Inativo' }}
+
+              </span>
+            </td>
+
+            <td>
+              <div class="acoes-container">
+
+                @if (assistido.ativo) {
+                <button class="btn-acao btn-editar" type="button" title="Editar assistido" aria-label="Editar assistido"
+                  (click)="editarAssistido(assistido)">
+                  ✎
+                </button>
+                }
+
+                <button class="btn-acao" [class.btn-inativar]="assistido.ativo" [class.btn-reativar]="!assistido.ativo"
+                  type="button" [title]="assistido.ativo ? 'Inativar assistido' : 'Reativar assistido'"
+                  [attr.aria-label]="assistido.ativo ? 'Inativar assistido' : 'Reativar assistido'"
+                  (click)="confirmarAlteracaoStatus(assistido)">
+
+                  {{ assistido.ativo ? '⊖' : '↻' }}
+
+                </button>
+
+                @if (!assistido.ativo) {
+                <button class="btn-acao btn-excluir" type="button" title="Excluir permanentemente"
+                  aria-label="Excluir permanentemente" (click)="confirmarExclusaoPermanente(assistido)">
+                  🗑
+                </button>
+                }
+
+              </div>
+            </td>
+
+          </tr>
+
+          } @empty {
+
+          <tr>
+            <td colspan="7" class="mensagem-vazia">
+              <span>⌕</span>
+              <strong>Nenhum assistido encontrado.</strong>
+              <p>Tente alterar sua pesquisa ou os filtros selecionados.</p>
+            </td>
+          </tr>
+
+          }
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- Paginação -->
+    <footer class="paginacao-container">
+
+      <div class="paginacao-info">
+        Exibindo
+        <strong>{{ primeiroRegistro() }}–{{ ultimoRegistro() }}</strong>
+        de
+        <strong>{{ totalRegistrosFiltrados() }}</strong>
+        registros
+
+        <label for="itensPorPagina"> | Por página:</label>
+
+        <select id="itensPorPagina" [value]="itensPorPagina()" (change)="alterarItensPorPagina($event)">
+
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+
+        </select>
+      </div>
+
+      <div class="paginacao-botoes">
+
+        <button type="button" title="Página anterior" aria-label="Página anterior"
+          [disabled]="paginaAtual() === 1 || carregando()" (click)="irParaPagina(paginaAtual() - 1)">
+          ‹
+        </button>
+
+        @for (pagina of paginas(); track pagina) {
+
+        <button type="button" [class.pagina-ativa]="paginaAtual() === pagina"
+          [attr.aria-current]="paginaAtual() === pagina ? 'page' : null" [disabled]="carregando()"
+          (click)="irParaPagina(pagina)">
+          {{ pagina }}
+        </button>
+
+        }
+
+        <button type="button" title="Próxima página" aria-label="Próxima página"
+          [disabled]="paginaAtual() >= totalPaginas() || carregando()" (click)="irParaPagina(paginaAtual() + 1)">
+          ›
+        </button>
+
+      </div>
+
+    </footer>
+
+  </section>
+
+</main>
+
+<!-- Modal de confirmação -->
+@if (assistidoSelecionado(); as selecionado) {
+
+<div class="modal-overlay">
+
+  <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+
+    <div class="modal-icone">
+      {{ selecionado.ativo ? '!' : '✓' }}
+    </div>
+
+    <h2 id="modal-titulo">
+      {{ selecionado.ativo ? 'Inativar assistido?' : 'Reativar assistido?' }}
+    </h2>
+
+    <p>
+      Você está prestes a
+      {{ selecionado.ativo ? 'inativar' : 'reativar' }}
+      o cadastro de <strong>{{ selecionado.nomeCompleto }}</strong>.
+    </p>
+
+    <p class="modal-aviso">
+      {{ selecionado.ativo
+      ? 'O cadastro continuará armazenado, mas ficará marcado como inativo.'
+      : 'O cadastro voltará a ficar marcado como ativo.'
+      }}
+    </p>
+
+    <div class="modal-acoes">
+
+      <button class="btn-cancelar" type="button" [disabled]="processandoAcao()" (click)="cancelarAlteracaoStatus()">
+        Cancelar
+      </button>
+
+      <button class="btn-confirmar" type="button" [disabled]="processandoAcao()" (click)="alterarStatus()">
+        {{ processandoAcao()
+        ? 'Processando...'
+        : selecionado.ativo ? 'Sim, inativar' : 'Sim, reativar'
+        }}
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
+
+}
+
+<!-- Modal de exclusão permanente -->
+@if (assistidoParaExcluir(); as selecionado) {
+
+  <div class="modal-overlay">
+
+    <section
+      class="modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-exclusao-titulo">
+
+      <div class="modal-icone">
+        !
+      </div>
+
+      <h2 id="modal-exclusao-titulo">
+        Excluir permanentemente?
+      </h2>
+
+      <p>
+        Você está prestes a excluir definitivamente o cadastro de
+        <strong>{{ selecionado.nomeCompleto }}</strong>.
+      </p>
+
+      <p class="modal-aviso">
+        Esta ação não poderá ser desfeita. Todos os dados deste cadastro
+        serão removidos permanentemente do banco de dados.
+      </p>
+
+      <div class="modal-acoes">
+
+        <button
+          class="btn-cancelar"
+          type="button"
+          [disabled]="processandoAcao()"
+          (click)="cancelarExclusaoPermanente()">
+          Cancelar
+        </button>
+
+        <button
+          class="btn-confirmar btn-excluir-confirmar"
+          type="button"
+          [disabled]="processandoAcao()"
+          (click)="excluirPermanente()">
+
+          {{ processandoAcao()
+            ? 'Excluindo...'
+            : 'Sim, excluir permanentemente'
+          }}
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+}
