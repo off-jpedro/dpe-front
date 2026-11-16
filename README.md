@@ -1,59 +1,132 @@
-# DpeFrontend
+# DPE-GO — Cadastro de Assistidos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.7.
+Frontend desenvolvido em **Angular** para gerenciamento de assistidos, permitindo realizar cadastros, consultas, atualizações e controle de situação dos registros.
 
-## Development server
+O projeto faz parte de uma aplicação com backend desenvolvido em Java e Spring Boot, utilizando PostgreSQL para persistência dos dados.
 
-To start a local development server, run:
+## Funcionalidades
+
+- **Cadastro de assistidos:** registro de informações pessoais, contato, renda e endereço.
+- **Listagem de assistidos:** visualização dos registros cadastrados.
+- **Pesquisa e filtros:** localização de registros por informações cadastrais e situação.
+- **Edição:** atualização dos dados de assistidos cadastrados.
+- **Inativação:** alteração da situação do cadastro sem remover os dados do banco.
+- **Reativação:** recuperação de cadastros inativos.
+- **Exclusão permanente:** remoção definitiva de cadastros inativos.
+- **Paginação:** organização dos registros em páginas.
+- **Validação de formulários:** validação de campos obrigatórios, CPF, e-mail e demais informações.
+
+## Tecnologias utilizadas
+
+- Angular
+- TypeScript
+- HTML5
+- SCSS
+- RxJS
+- Angular Reactive Forms
+- Angular Router
+- Angular Signals
+- HTTP Client
+
+## Estrutura do projeto
+
+```text
+src/
+└── app/
+    ├── core/
+    │   └── services/
+    │       └── assistido.service.ts
+    │
+    ├── features/
+    │   └── assistidos/
+    │       ├── models/
+    │       │   └── assistido.model.ts
+    │       │
+    │       └── pages/
+    │           ├── formulario-assistido/
+    │           │   ├── formulario-assistido.html
+    │           │   ├── formulario-assistido.scss
+    │           │   └── formulario-assistido.ts
+    │           │
+    │           └── listagem-assistidos/
+    │               ├── listagem-assistidos.html
+    │               ├── listagem-assistidos.scss
+    │               └── listagem-assistidos.ts
+    │
+    ├── app.config.ts
+    ├── app.routes.ts
+    └── app.html
+```
+
+### Organização
+
+- **Core:** serviços compartilhados e comunicação com a API.
+- **Features:** funcionalidades organizadas por domínio.
+- **Models:** interfaces e modelos utilizados pela aplicação.
+- **Pages:** componentes responsáveis pelas telas do sistema.
+
+## Pré-requisitos
+
+Para executar o projeto localmente, é necessário ter instalado:
+
+- Node.js
+- npm
+- Angular CLI
+
+## Como executar
+
+### 1. Clonar o repositório
+
+```bash
+git clone https://github.com/SEU-USUARIO/dpe-go-assistido-frontend.git
+```
+
+### 2. Entrar na pasta do projeto
+
+```bash
+cd dpe-frontend
+```
+
+### 3. Instalar as dependências
+
+```bash
+npm install
+```
+
+### 4. Executar a aplicação
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+A aplicação ficará disponível em:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Integração com o Backend
 
-```bash
-ng generate --help
+O frontend realiza a comunicação com uma API REST desenvolvida em Java e Spring Boot.
+
+Endpoint base:
+
+```text
+http://localhost:8080/api/assistidos
 ```
 
-## Building
+Para utilizar todas as funcionalidades, o backend deverá estar em execução e acessível pela aplicação.
 
-To build the project run:
+## Observações
 
-```bash
-ng build
-```
+- A aplicação utiliza UUID para identificação dos assistidos.
+- A inativação preserva os registros no banco de dados.
+- A exclusão permanente é destinada exclusivamente aos cadastros inativos.
+- Os dados são persistidos pelo backend, não diretamente pelo frontend.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Projeto:** DPE-GO — Cadastro de Assistidos  
+**Frontend:** Angular  
+**Backend:** Java + Spring Boot  
+**Banco de dados:** PostgreSQL
